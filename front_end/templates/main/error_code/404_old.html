@@ -1,0 +1,34 @@
+<html>
+
+<head>
+    <title>RapiLink - 404</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('front.static', filename='css/error_code/404.css') }}">
+    <link href='https://fonts.googleapis.com/css?family=Work%20Sans' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+
+<a href="https://rapi.link">
+    <img src="{{ url_for('front.static', filename='img/site_branding/logo_small.png') }}" class="logo_small">
+</a>
+
+<div class="label_404 animation blank" id="label_404">404</div>
+<div class="label_not_found animation blank" id="label_not_found">Page Not Found</div>
+
+<script src="{{ url_for('front.static', filename='js/jquery-3.3.1.min.js') }}"></script>
+<script>
+    function showAnimation() {
+        label_404 = document.getElementById("label_404");
+        label_not_found = document.getElementById("label_not_found");
+
+        label_404.classList.remove("blank");
+        label_not_found.classList.remove("blank");
+    }
+
+    setTimeout(showAnimation, 100);
+</script>
+
+</body>
+
+
+</html>

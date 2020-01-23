@@ -1,0 +1,99 @@
+<html>
+
+<head>
+    <title>RapiLink - 404</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('front_new.static', filename='css/error_code/404.css') }}">
+    <link href='https://fonts.googleapis.com/css?family=Work%20Sans' rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+            width: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Demo Buttons Style */
+
+        .codrops-demos {
+            font-size: 0.8em;
+            text-align: center;
+            position: absolute;
+            z-index: 99;
+            width: 96%;
+        }
+
+        .codrops-demos a {
+            display: inline-block;
+            margin: 0.35em 0.1em;
+            padding: 0.5em 1.2em;
+            outline: none;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            border-radius: 2px;
+            font-size: 110%;
+            border: 2px solid transparent;
+            color: #fff;
+        }
+
+        .codrops-demos a:hover,
+        .codrops-demos a.current-demo {
+            border-color: #383a3c;
+        }
+    </style>
+</head>
+
+<body>
+
+<canvas id="canv"></canvas>
+<style>
+    #canv {
+        position: absolute;
+        z-index: 0;
+        top: 0;
+        left: 0;
+    }
+</style>
+
+<script src="{{ url_for('front_new.static', filename='js/animations/stars_no_mouse.js') }}"></script>
+
+<a href="https://rapi.link" class="unselective">
+    <img src="{{ url_for('front_new.static', filename='img/site_branding/logo_small.png') }}" class="logo_small">
+</a>
+
+<div class="label_404 animation blank unselective" id="label_404">404</div>
+<div class="label_not_found animation blank unselective" id="label_not_found">Page Not Found</div>
+
+<script src="{{ url_for('front_new.static', filename='js/jquery-3.3.1.min.js') }}"></script>
+<script>
+    function showAnimation() {
+        label_404 = document.getElementById("label_404");
+        label_not_found = document.getElementById("label_not_found");
+
+        label_404.classList.remove("blank");
+        label_not_found.classList.remove("blank");
+    }
+
+    setTimeout(showAnimation, 100);
+</script>
+
+</body>
+
+<footer>
+    <style>
+        .footer_box {
+            position: absolute;
+            bottom: 28px;
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+    <div class="footer_box">
+        <div class="copyright unselective">Copyright © 2019 Artrix Technologies CO.,LTD All rights reserved.</div>
+    </div>
+
+</footer>
+
+
+</html>

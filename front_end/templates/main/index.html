@@ -1,0 +1,164 @@
+<html style="overflow-x: hidden;overflow-y: hidden;">
+
+<head>
+    <title>Daaogo.club | 倒狗俱乐部</title>
+
+
+    <link rel="stylesheet/less" type="text/css" href="{{ url_for('main.static', filename='style/main.less') }}">
+    <link href='https://fonts.googleapis.com/css?family=Work%20Sans' rel='stylesheet' type='text/css'>
+
+    <script src="{{ url_for('main.static', filename='js/utils/less-var-manager.js') }}"></script>
+    <script src="{{ url_for('main.static', filename='js/jquery-3.3.1.min.js') }}"></script>
+
+    <script>
+        less = {
+            env: "development",
+            async: false,
+            fileAsync: false,
+            poll: 1000,
+            functions: {},
+            dumpLineNumbers: "comments",
+            relativeUrls: false,
+            rootpath: ":/a.com/"
+        };
+
+    </script>
+
+    <script src="{{ url_for('main.static', filename='js/less.min.js') }}"></script>
+    <script src="{{ url_for('main.static', filename='js/utils/time.js') }}"></script>
+
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('main.static', filename='layui/css/layui.css') }}">
+    <script src="{{ url_for('main.static', filename='layui/layui.js') }}"></script>
+
+
+</head>
+
+<body style="background-repeat: no-repeat;background-size: 100%;">
+
+
+<script>
+
+    var lessmgr = new LessManager();
+    lessmgr.init();
+
+    lessmgr.modifyVars({
+        '@window-height': $(document).height(),
+        '@window-width': $(document).width()
+    });
+</script>
+
+
+<div id="full_container">
+    <ul class="layui-nav layui-nav-tree" id="left_nav_bar" lay-filter="test">
+        <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
+        <li class="layui-nav-item layui-nav-itemed">
+            <a href="javascript:;">默认展开</a>
+            <dl class="layui-nav-child">
+                <dd><a href="javascript:;">选项1</a></dd>
+                <dd><a href="javascript:;">选项2</a></dd>
+                <dd><a href="">跳转</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item">
+            <a href="javascript:;">解决方案</a>
+            <dl class="layui-nav-child">
+                <dd><a href="">移动模块</a></dd>
+                <dd><a href="">后台模版</a></dd>
+                <dd><a href="">电商平台</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item"><a href="">产品</a></li>
+        <li class="layui-nav-item"><a href="">大数据</a></li>
+    </ul>
+
+    <div class="layui-tab" id="page_container">
+        <ul class="layui-tab-title">
+            <li class="layui-this">网站设置</li>
+            <li>用户管理</li>
+            <li>权限分配</li>
+            <li>商品管理</li>
+            <li>订单管理</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <table id="main_table"></table>
+            </div>
+            <div class="layui-tab-item">内容2</div>
+            <div class="layui-tab-item">内容3</div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    layui.use('table', function () {
+        var table = layui.table;
+
+        //第一个实例
+        table.render({
+            elem: '#main_table',
+            height: lessmgr.getVar('@window-height') - 80,
+            url: '/get_sell_recommend', //数据接口
+            defaultToolbar: ['filter', 'print', 'exports', {
+                title: '提示' //标题
+                , layEvent: 'LAYTABLE_TIPS' //事件名，用于 toolbar 事件中使用
+                , icon: 'layui-icon-tips' //图标类名
+            }],
+            page: true,
+            parseData: function (res) {
+                var timestamp = Date.parse(new Date());
+                res.data.forEach(element => {
+                    if (element.type.search('weapon') != -1) element.type = '武器'
+                    else if (element.type.search('sticker') != -1) element.type = '印花'
+
+                    element.update_time = timeConvert(1000 * element.update_time)
+                    element.buff_selling_duration = parseInt(element.buff_selling_duration / 86400 * 24)
+
+                });
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
+            cols: [[
+                {field: 'realtime_data.name', title: '名称', width: 180, fixed: 'left'}
+                , {field: 'realtime_data.buff_id', title: 'Buff ID', width: 80, fixed: 'left'}
+                , {field: 'type', title: '种类', width: 60, fixed: 'left'}
+                , {field: 'buff_selling_duration', title: '周转时', width: 88, sort: true, fixed: 'left'}
+                , {field: 'update_time', title: '上次更新', width: 88}
+                , {field: 'buff_in_stock_count', title: '在售', width: 66}
+                , {field: 'buff_buy_price', title: 'Buff买', width: 76}
+                , {field: 'buff_sell_price', title: 'Buff卖', width: 76}
+                , {field: 'steam_buy_price', title: 'Steam买', width: 88}
+                , {field: 'steam_sell_price', title: 'Steam卖', width: 88}
+                , {field: 'buff_profit_ratio', title: 'Buff卖出收益率', width: 80}
+                , {field: 'steam_profit_ratio', title: 'Steam卖出收益率', width: 135, sort: true}
+                , {field: 'buff_history_trade_price_std_error', title: 'Buff成交价格标准差', width: 135, sort: true}
+            ]]
+        });
+
+    });
+</script>
+
+</body>
+
+<footer>
+    <style>
+        .footer_box {
+            position: absolute;
+            bottom: 28px;
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+    <div class="footer_box">
+        <div class="copyright unselective">Copyright © 2019 Artrix Technologies. Backgrounds provided by Bing.</div>
+    </div>
+
+</footer>
+
+
+</html>
