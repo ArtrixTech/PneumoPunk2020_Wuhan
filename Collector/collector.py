@@ -5,6 +5,7 @@ from utils.api import *
 from utils.api_list import *
 from utils.cut_string import cut_string
 from utils.database import DatabaseOperation
+from utils.exception_retry import retry
 
 db = DatabaseOperation("mysql.artrix.tech", "pneu2020", "pneu2020",
                        "pneu2020", charset='utf8', port=33069)
@@ -12,7 +13,7 @@ db = DatabaseOperation("mysql.artrix.tech", "pneu2020", "pneu2020",
 last_time = None
 SLEEP_DELAY = 10  # Unit: second
 while True:
-    content = api_fetch(DXY_URL)
+    content = retry(api_fetch, 2, DXY_URL)
     overview = '{' + cut_string(content, 'window.getStatisticsService = {', '}') + '}'
     overview_json = json.loads(overview)
 
