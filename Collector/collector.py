@@ -11,6 +11,7 @@ db = DatabaseOperation("mysql.artrix.tech", "pneu2020", "pneu2020",
                        "pneu2020", charset='utf8', port=33069)
 
 last_time = None
+last_data = None
 SLEEP_DELAY = 10  # Unit: second
 while True:
     skip_flag = False
@@ -35,9 +36,12 @@ while True:
             cured = cut_string(count_describe_text, '治愈', '例').strip('\' ')
             death = cut_string(count_describe_text, '死亡', '例').strip('\' ')
 
-            db.insert_item_data('data_record', str(
-                (modify_time, region, infected, death, sceptical, cured, image_url)))
+            data = str(
+                (modify_time, region, infected, death, sceptical, cured, image_url))
+            if not last_data == data:
+                db.insert_item_data('data_record', data)
 
+            last_data = data
             last_time = modify_time
 
     time.sleep(SLEEP_DELAY)

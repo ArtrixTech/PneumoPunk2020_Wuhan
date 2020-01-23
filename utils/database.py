@@ -59,6 +59,7 @@ class DatabaseOperation:
         self.db.commit()
 
     def execute(self, sql):
+
         try:
             return bool(self.cursor.execute(sql)), self.cursor.fetchall()
         except pymysql.err.OperationalError:
@@ -86,28 +87,7 @@ class DatabaseOperation:
                 self.cursor.execute("SELECT %s FROM CSGO.%s WHERE %s;" % (column_name, table_name, where_clause))), \
                    self.cursor.fetchall()
 
-    # TODO: Move this function to its right place
-    def execute_with_json_return(self, sql):
-        import json
-        assert isinstance(sql, SqlCommand)
 
-        keys = str(sql.select_param[0]).split(',')
-
-        flag, result = self.execute(str(sql))
-
-        if flag:
-            rt_list = {'code': 0, 'count': len(result), 'msg': "", 'data': []}
-            for item in result:
-
-                item_dict = {}
-                index = 0
-                for data in item:
-                    item_dict[keys[index].replace(" ", "")] = data
-                    index += 1
-
-                rt_list['data'].append(item_dict)
-            return json.dumps(rt_list)
-        return {'code': 400, 'count': 0, 'msg': "Database Error."}
 
 
 class SqlCommand:
