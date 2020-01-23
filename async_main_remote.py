@@ -20,7 +20,7 @@ app.debug = False
 
 print(app.url_map)
 
-http_server = WSGIServer(('45.76.102.168', 80), app, handler_class=WebSocketHandler)
+http_server = WSGIServer(('45.76.102.168', 2020), app, handler_class=WebSocketHandler)
 
 
 def start():
