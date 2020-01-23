@@ -51,7 +51,7 @@ class DatabaseOperation:
     def insert_item_data(self, item_name, data):
         print("INSERT INTO %s VALUES %s" %
               (str(item_name), str(data)))
-        self.cursor.execute("INSERT INTO %s VALUES %s" %
+        self.cursor.execute("INSERT IGNORE INTO %s VALUES %s" %
                             (str(item_name), str(data)))
         self.commit()
 
