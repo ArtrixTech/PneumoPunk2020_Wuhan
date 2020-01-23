@@ -58,7 +58,7 @@
 
 </ul>
 
-<div id="main" style="width: 1200px;height:400px;"></div>
+<div id="main" style="width: 1200px;height:600px;padding:64px;"></div>
 <script type="text/javascript">
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main'), 'main_theme');
@@ -70,7 +70,7 @@
 
         let option = {
             title: {
-                text: '第一个 ECharts 实例'
+                text: 'Wuhan nCov-2019 realtime stats'
             },
             dataset: {source: return_data['data']},
             tooltip: {},
@@ -81,6 +81,9 @@
                 min: function (value) {
                     return value.min - 1000;
                 },
+                max: function (value) {
+                    return value.max + 1000;
+                },
                 // boundaryGap: ['20%', '20%']
             },
             yAxis: {
@@ -88,7 +91,10 @@
                     return value.min - ((value.max - value.min) * 0.1).toFixed(0);
                 },
             },
-            series: [{type: 'line', encode: {x: 'time', y: 'infected'}},]
+            series: [{type: 'line', encode: {x: 'time', y: 'infected'}},
+                //{type: 'line', encode: {x: 'time', y: 'sceptical'}},
+            ]
+
 
         };
 

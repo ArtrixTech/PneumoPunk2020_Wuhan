@@ -16,6 +16,7 @@ def execute_with_json_return(db, sql_command):
     keys = str(sql_command.select_param[0]).split(',')
 
     flag, result = db.execute(str(sql_command))
+    db.commit()
 
     if flag:
         rt_list = {'code': 0,

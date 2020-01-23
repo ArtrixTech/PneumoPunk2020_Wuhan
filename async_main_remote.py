@@ -9,7 +9,6 @@ from flask import Flask
 from geventwebsocket.handler import WebSocketHandler
 from gevent.pywsgi import WSGIServer
 import utils.specs as project_vars
-from timing_task import timing_task
 
 app = project_blueprints.bind_blueprints(Flask(__name__, static_folder="", static_url_path=None))
 app.url_map.default_subdomain = ''
@@ -31,6 +30,5 @@ def start():
 tr = Thread(target=start)
 tr.start()
 
-while 1:
-    timing_task.check()
-    time.sleep(timing_task.check_interval)
+while True:
+    time.sleep(10)
