@@ -38,10 +38,19 @@ while True:
 
 
             def data_equal(tuple1, tuple2):
+
+                def exist_in_tuple(tuple_input, data):
+                    assert isinstance(tuple_input, tuple)
+                    try:
+                        i = tuple_input.index(data)
+                        return True
+                    except ValueError:
+                        return False
+
                 assert isinstance(tuple1, tuple) and isinstance(tuple2, tuple)
                 if len(tuple1) == len(tuple2):
                     for item in tuple1:
-                        if not tuple2.index(item) >= 0:
+                        if not exist_in_tuple(tuple2, item):
                             return False
                     return True
                 return False
