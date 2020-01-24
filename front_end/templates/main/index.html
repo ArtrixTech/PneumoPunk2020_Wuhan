@@ -75,7 +75,7 @@
             dataset: {source: return_data['data']},
             tooltip: {},
             legend: {
-                data: ['销量']
+                data: ['asdsad']
             },
             xAxis: {
                 min: function (value) {
@@ -88,11 +88,14 @@
             },
             yAxis: {
                 min: function (value) {
-                    return value.min - ((value.max - value.min) * 0.1).toFixed(0);
+                    v = value.min - ((value.max - value.min) * 0.1).toFixed(0);
+                    return v >= 0 ? v : 0;
                 },
             },
             series: [{type: 'line', encode: {x: 'time', y: 'infected'}},
-                //{type: 'line', encode: {x: 'time', y: 'sceptical'}},
+                {type: 'line', encode: {x: 'time', y: 'sceptical'}},
+                {type: 'line', encode: {x: 'time', y: 'death'}},
+                {type: 'line', encode: {x: 'time', y: 'cured'}},
             ]
 
 

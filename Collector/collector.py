@@ -59,7 +59,7 @@ while True:
             data = (modify_time, region, infected, death, sceptical, cured, image_url)
             data_str = str(data)
 
-            if not data_equal(data, last_data):
+            if not data_equal(data[1:], last_data[1:]):
                 db.insert_item_data('data_record', data_str)
 
             last_data = data
