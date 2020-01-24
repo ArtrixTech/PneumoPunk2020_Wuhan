@@ -11,7 +11,7 @@ db = DatabaseOperation("mysql.artrix.tech", "pneu2020", "pneu2020",
                        "pneu2020", charset='utf8', port=33069)
 
 last_time = None
-last_data = None
+last_data = ()
 SLEEP_DELAY = 10  # Unit: second
 while True:
     skip_flag = False
@@ -36,10 +36,22 @@ while True:
             cured = cut_string(count_describe_text, '治愈', '例').strip('\' ')
             death = cut_string(count_describe_text, '死亡', '例').strip('\' ')
 
-            data = str(
-                (modify_time, region, infected, death, sceptical, cured, image_url))
-            if not last_data == data:
-                db.insert_item_data('data_record', data)
+
+            def data_equal(tuple1, tuple2):
+                assert isinstance(tuple1, tuple) and isinstance(tuple2, tuple)
+                if len(tuple1) == len(tuple2):
+                    for item in tuple1:
+                        if not tuple2.index(item) >= 0:
+                            return False
+                    return True
+                return False
+
+
+            data = (modify_time, region, infected, death, sceptical, cured, image_url)
+            data_str = str(data)
+
+            if not data_equal(data, last_data):
+                db.insert_item_data('data_record', data_str)
 
             last_data = data
             last_time = modify_time

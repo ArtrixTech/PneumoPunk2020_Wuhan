@@ -14,7 +14,7 @@ app = project_blueprints.bind_blueprints(
     Flask(__name__, static_folder="", static_url_path=None))
 app.url_map.default_subdomain = ''
 app.config.update({
-    'SERVER_NAME': project_vars.DOMAIN,
+    'SERVER_NAME': project_vars.LOCAL_DOMAIN,
     'DEBUG': 'True'
 })
 app.debug = True

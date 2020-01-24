@@ -4,3 +4,4 @@ HEADERS = {
 
 # Frontend
 DOMAIN = 'p.rapi.link:2020'
+LOCAL_DOMAIN = 't.p.rapi.link'
