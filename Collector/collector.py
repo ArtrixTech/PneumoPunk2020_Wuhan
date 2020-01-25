@@ -25,7 +25,7 @@ while True:
 
     if not skip_flag and overview_json:
 
-        modify_time = int(str(overview_json['modifyTime']).strip('000'))
+        modify_time = int(str(overview_json['modifyTime']).replace('000', ''))
         if not last_time == modify_time:
             region = str(overview_json['id'])
             image_url = overview_json['imgUrl']
