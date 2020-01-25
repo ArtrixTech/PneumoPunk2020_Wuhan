@@ -71,21 +71,30 @@
 
 <div class="layui-row" id="pn-main-container">
 
-    <div class="layui-row layui-col-space5 pn-chart-container-dual">
-        <div class="layui-col-xs6" style="background: white">
-            <div id="infected" style="width: 100%;height:100%;"></div>
-        </div>
-        <div class="layui-col-xs6" style="background: white">
-            <div id="sceptical" style="width: 100%;height:100%;"></div>
-        </div>
-    </div>
+    <div class="layui-row layui-col-space5">
+        <div class="layui-col-xs6  pn-chart-container-col" style="background: white">
 
-    <div class="layui-row layui-col-space5 pn-chart-container-dual">
-        <div class="layui-col-xs6" style="background: white">
-            <div id="death" style="width: 100%;height:100%;"></div>
+            <div class="layui-row layui-col-space5 pn-chart-container-dual">
+                <div id="total" style="width: 100%;height:100%;"></div>
+            </div>
+            <div class="layui-row layui-col-space5 pn-chart-container-dual">
+                <div id="infected" style="width: 100%;height:100%;"></div>
+            </div>
+
+
         </div>
-        <div class="layui-col-xs6" style="background: white">
-            <div id="cured" style="width: 100%;height:100%;"></div>
+
+        <div class="layui-col-xs6 pn-chart-container-col" style="background: white">
+            <div class="layui-row layui-col-space5 pn-chart-container-triple">
+                <div id="death" style="width: 100%;height:100%;"></div>
+            </div>
+            <div class="layui-row layui-col-space5 pn-chart-container-triple">
+                <div id="sceptical" style="width: 100%;height:100%;"></div>
+            </div>
+            <div class="layui-row layui-col-space5 pn-chart-container-triple">
+                <div id="cured" style="width: 100%;height:100%;"></div>
+            </div>
+
         </div>
     </div>
 
@@ -102,46 +111,55 @@
             let chart_sceptical = echarts.init(document.getElementById('sceptical'), 'main_theme');
             let chart_death = echarts.init(document.getElementById('death'), 'main_theme');
             let chart_cured = echarts.init(document.getElementById('cured'), 'main_theme');
-
+            let chart_total = echarts.init(document.getElementById('total'), 'main_theme');
 
             $.getJSON('/get_history', (return_data) => {
 
+                console.log(return_data['data'])
 
                 let option_i = {
-                        dataset: {source: return_data['data']},
-                        title: {
-                            text: 'Infected | 感染',
-                            textStyle: {
-                                color: '#4a4a4a',
-                                fontFamily: 'alibold',
-                            }
+                    dataset: {source: return_data['data']},
+                    title: {
+                        text: 'Infected | 感染',
+                        textStyle: {
+                            color: '#4a4a4a',
+                            fontFamily: 'alibold',
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'line'
+                        }
+                    },
+                    dataZoom: [
+                        {
+                            type: 'inside',
+                            filterMode: 'weakFilter',
+                            startValue: return_data['start_time']
                         },
-                        xAxis: {
-                            min: function (value) {
-                                return value.min - 1000;
-                            }
-                            ,
-                            max: function (value) {
-                                return value.max + 1000;
-                            }
-                            ,
-                        }
-                        ,
-                        yAxis: {
-                            min: function (value) {
-                                v = value.min - ((value.max - value.min) * 0.1).toFixed(0);
-                                return v >= 0 ? v : 0;
-                            }
-                            ,
-                        }
-                        ,
-                        series: [
-                            {type: 'line', encode: {x: 'time', y: 'infected'}, smoothMonotone: 'x'},
-                            {type: 'line', encode: {x: 'time', y: 'infected'}, smoothMonotone: 'x'},
-                            {type: 'line', encode: {x: 'time', y: 'infected'}, smoothMonotone: 'x'},
-                        ]
-                    }
-                ;
+
+                    ],
+                    xAxis: {
+                        scale: true,
+                        min: function (value) {
+                            return value.min - 1000;
+                        },
+                        max: function (value) {
+                            return value.max + 1000;
+                        },
+                    },
+                    yAxis: {
+                        min: function (value) {
+                            v = value.min - ((value.max - value.min) * 0.1).toFixed(0);
+                            return v >= 0 ? v : 0;
+                        },
+                    },
+                    series: [
+                        {type: 'line', encode: {x: 'time', y: 'infected'}, smoothMonotone: 'x'},
+
+                    ]
+                };
                 let option_s = {
                     dataset: {source: return_data['data']},
                     title: {
@@ -151,10 +169,13 @@
                             fontFamily: 'alibold',
                         }
                     },
+
                     xAxis: {
+                        scale: true,
                         min: function (value) {
                             return value.min - 1000;
                         },
+                        axisLine: {onZero: false},
                         max: function (value) {
                             return value.max + 1000;
                         },
@@ -212,6 +233,7 @@
                         }
                     },
                     xAxis: {
+                        scale: true,
                         min: function (value) {
                             return value.min - 1000;
                         },
@@ -225,17 +247,69 @@
                             return v >= 0 ? v : 0;
                         },
                     },
-                    series: [{type: 'line', encode: {x: 'time', y: 'cured'}, smoothMonotone: 'x'},]
+                    series: [
+                        {type: 'line', encode: {x: 'time', y: 'cured'}, smoothMonotone: 'x'},
+                        {type: 'line', encode: {x: 'time', y: 'cured'}, smoothMonotone: 'x'},
+                        {type: 'line', encode: {x: 'time', y: 'cured'}, smoothMonotone: 'x'},
+                    ]
                 };
 
+                let option_total = {
+                    dataset: {source: return_data['data']},
+                    title: {
+                        text: 'Total | 综合',
+                        textStyle: {
+                            color: '#4a4a4a',
+                            fontFamily: 'alibold',
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'line'
+                        }
+                    },
+                    dataZoom: [
+                        {
+                            type: 'inside',
+                            filterMode: 'weakFilter',
+                            startValue: return_data['start_time']
+                        },
+
+                    ],
+
+                    xAxis: {
+                        scale: true,
+                        min: function (value) {
+                            return value.min - 1000;
+                        },
+                        max: function (value) {
+                            return value.max + 1000;
+                        },
+                    },
+                    yAxis: {
+                        min: function (value) {
+                            v = value.min - ((value.max - value.min) * 0.1).toFixed(0);
+                            return v >= 0 ? v : 0;
+                        },
+                    },
+                    series: [
+                        {type: 'line', encode: {x: 'time', y: 'infected'}, smoothMonotone: 'x'},
+                        {type: 'line', encode: {x: 'time', y: 'sceptical'}, smoothMonotone: 'x'},
+                        //{type: 'line', encode: {x: 'time', y: 'death'}, smoothMonotone: 'x'},
+                        //{type: 'line', encode: {x: 'time', y: 'cured'}, smoothMonotone: 'x'},
+                    ]
+                };
 
                 chart_infected.setOption(option_i);
                 chart_sceptical.setOption(option_s);
                 chart_death.setOption(option_d);
                 chart_cured.setOption(option_c);
+                chart_total.setOption(option_total);
 
 
             });
+
 
         }
     );
