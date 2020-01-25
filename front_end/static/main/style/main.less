@@ -1,20 +1,54 @@
 @left_bar_width: 80;
 @window-width: 0;
-#left_nav_bar {
-  top: 0;
-  float: left;
-  display: inline-block;
-  width: @left_bar_width;
-  height: 100%;
+
+@font-face {
+  font-family: 'alibold';
+  font-display: swap;
+  src: url('//at.alicdn.com/t/webfont_d7mrgwvdxhl.eot'); /* IE9*/
+  src: url('//at.alicdn.com/t/webfont_d7mrgwvdxhl.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('//at.alicdn.com/t/webfont_d7mrgwvdxhl.woff2') format('woff2'),
+  url('//at.alicdn.com/t/webfont_d7mrgwvdxhl.woff') format('woff'), /* chrome、firefox */ url('//at.alicdn.com/t/webfont_d7mrgwvdxhl.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/ url('//at.alicdn.com/t/webfont_d7mrgwvdxhl.svg#Alibaba-PuHuiTi-Bold') format('svg'); /* iOS 4.1- */
 }
 
-#page_container {
-  top: 0;
-  display: inline-block;
-  width: @window-width - @left_bar_width - 2;
+
+body {
+
+  font-family: 'alibold', 'Noto Sans SC', 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
 }
 
-#main_table {
-  height: 100%;
+
+#pn-navigator-title {
+  font-size: 1.3rem;
+  font-weight: 200;
+  color: #4a4a4a;
+  top: 0.3rem;
+  padding-left: 2.5rem;
+  position: relative;
 }
 
+#pn-navigator-logo {
+  filter: brightness(0.2);
+  width: 5.5rem;
+  //padding: 2rem;
+  padding-left: 3rem;
+}
+
+#pn-main-container {
+
+  padding: 2em 8em 9em 8em;
+  //height: 100%;
+}
+
+.pn-chart-container-dual {
+  height: 21em;
+}
+
+.pn-footer {
+  position: absolute;
+  bottom: 28px;
+  text-align: center;
+  width: 100%;
+  color: gray;
+  font-weight: 800;
+  font-family: Noto Sans SC;
+  font-size: 0.1em;
+}

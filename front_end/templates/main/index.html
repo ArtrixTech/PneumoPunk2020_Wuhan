@@ -1,11 +1,17 @@
 <html style="overflow-x: hidden;overflow-y: hidden;">
 
 <head>
-    <title>Daaogo.club | 倒狗俱乐部</title>
+    <title>Pneumo2020 | 疫情可视化</title>
 
+    <link rel="stylesheet" type="text/css" href="{{ url_for('main.static', filename='layui/css/layui.css') }}">
+    <script src="{{ url_for('main.static', filename='layui/layui.js') }}"></script>
+
+    <link rel="stylesheet/less" type="text/css"
+          href="{{ url_for('main.static', filename='style/layui-override.less') }}">
 
     <link rel="stylesheet/less" type="text/css" href="{{ url_for('main.static', filename='style/main.less') }}">
-    <link href='https://fonts.googleapis.com/css?family=Work%20Sans' rel='stylesheet' type='text/css'>
+
+    <link href="https://fonts.googleapis.com/css?family=Catamaran|Noto+Sans+SC&display=swap" rel="stylesheet">
 
     <script src="{{ url_for('main.static', filename='js/utils/less-var-manager.js') }}"></script>
     <script src="{{ url_for('main.static', filename='js/jquery-3.3.1.min.js') }}"></script>
@@ -28,9 +34,6 @@
     <script src="{{ url_for('main.static', filename='js/utils/time.js') }}"></script>
 
 
-    <link rel="stylesheet" type="text/css" href="{{ url_for('main.static', filename='layui/css/layui.css') }}">
-    <script src="{{ url_for('main.static', filename='layui/layui.js') }}"></script>
-
     <script src="https://cdn.staticfile.org/echarts/4.6.0/echarts.min.js"></script>
 
     <script src="{{ url_for('main.static', filename='echart_resources/theme.js') }}"></script>
@@ -50,7 +53,15 @@
         '@window-width': $(document).width()
     });
 </script>
-<ul class="layui-nav" id="lango-navigator">
+<ul class="layui-nav" id="pn-navigator">
+
+    <div style="padding: 2rem;display: inline-block;">
+        <a href="https://artrix.tech">
+            <img src="{{ url_for('main.static', filename='img/artrix_logo.png') }}" id="pn-navigator-logo">
+        </a>
+
+        <span id="pn-navigator-title">2019-nCov疫情实时统计数据</span>
+    </div>
 
 
     <li class="layui-nav-item unselective"><a href="">GitHub</a></li>
@@ -58,58 +69,179 @@
 
 </ul>
 
-<div id="main" style="width: 1200px;height:600px;padding:64px;"></div>
+<div class="layui-row" id="pn-main-container">
+
+    <div class="layui-row layui-col-space5 pn-chart-container-dual">
+        <div class="layui-col-xs6" style="background: white">
+            <div id="infected" style="width: 100%;height:100%;"></div>
+        </div>
+        <div class="layui-col-xs6" style="background: white">
+            <div id="sceptical" style="width: 100%;height:100%;"></div>
+        </div>
+    </div>
+
+    <div class="layui-row layui-col-space5 pn-chart-container-dual">
+        <div class="layui-col-xs6" style="background: white">
+            <div id="death" style="width: 100%;height:100%;"></div>
+        </div>
+        <div class="layui-col-xs6" style="background: white">
+            <div id="cured" style="width: 100%;height:100%;"></div>
+        </div>
+    </div>
+
+
+</div>
+
+
 <script type="text/javascript">
-    // 基于准备好的dom，初始化echarts实例
-    var myChart = echarts.init(document.getElementById('main'), 'main_theme');
-    $.getJSON('/get_history', (return_data) => {
-        console.log(return_data['start_time']);
+
+    less.pageLoadFinished.then(
+        () => {
+
+            let chart_infected = echarts.init(document.getElementById('infected'), 'main_theme');
+            let chart_sceptical = echarts.init(document.getElementById('sceptical'), 'main_theme');
+            let chart_death = echarts.init(document.getElementById('death'), 'main_theme');
+            let chart_cured = echarts.init(document.getElementById('cured'), 'main_theme');
 
 
-        console.log(return_data['data']);
-
-        let option = {
-            title: {
-                text: 'Wuhan 2019-nCov realtime stats'
-            },
-            dataset: {source: return_data['data']},
-            tooltip: {},
-            legend: {
-                data: ['asdsad']
-            },
-            xAxis: {
-                min: function (value) {
-                    return value.min - 1000;
-                },
-                max: function (value) {
-                    return value.max + 1000;
-                },
-                // boundaryGap: ['20%', '20%']
-            },
-            yAxis: {
-                min: function (value) {
-                    v = value.min - ((value.max - value.min) * 0.1).toFixed(0);
-                    return v >= 0 ? v : 0;
-                },
-            },
-            series: [{type: 'line', encode: {x: 'time', y: 'infected'}},
-                {type: 'line', encode: {x: 'time', y: 'sceptical'}},
-                {type: 'line', encode: {x: 'time', y: 'death'}},
-                {type: 'line', encode: {x: 'time', y: 'cured'}},
-            ]
+            $.getJSON('/get_history', (return_data) => {
 
 
-        };
+                let option_i = {
+                        dataset: {source: return_data['data']},
+                        title: {
+                            text: 'Infected | 感染',
+                            textStyle: {
+                                color: '#4a4a4a',
+                                fontFamily: 'alibold',
+                            }
+                        },
+                        xAxis: {
+                            min: function (value) {
+                                return value.min - 1000;
+                            }
+                            ,
+                            max: function (value) {
+                                return value.max + 1000;
+                            }
+                            ,
+                        }
+                        ,
+                        yAxis: {
+                            min: function (value) {
+                                v = value.min - ((value.max - value.min) * 0.1).toFixed(0);
+                                return v >= 0 ? v : 0;
+                            }
+                            ,
+                        }
+                        ,
+                        series: [
+                            {type: 'line', encode: {x: 'time', y: 'infected'}, smoothMonotone: 'x'},
+                            {type: 'line', encode: {x: 'time', y: 'infected'}, smoothMonotone: 'x'},
+                            {type: 'line', encode: {x: 'time', y: 'infected'}, smoothMonotone: 'x'},
+                        ]
+                    }
+                ;
+                let option_s = {
+                    dataset: {source: return_data['data']},
+                    title: {
+                        text: 'Sceptical | 疑似',
+                        textStyle: {
+                            color: '#4a4a4a',
+                            fontFamily: 'alibold',
+                        }
+                    },
+                    xAxis: {
+                        min: function (value) {
+                            return value.min - 1000;
+                        },
+                        max: function (value) {
+                            return value.max + 1000;
+                        },
+                    },
+                    yAxis: {
+                        min: function (value) {
+                            v = value.min - ((value.max - value.min) * 0.1).toFixed(0);
+                            return v >= 0 ? v : 0;
+                        },
+                    },
+                    series: [
+                        {type: 'line', encode: {x: 'time', y: 'sceptical'}, smoothMonotone: 'x'},
+                        {type: 'line', encode: {x: 'time', y: 'sceptical'}, smoothMonotone: 'x'},
+                    ]
+                };
 
-        // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(option);
+                let option_d = {
+                    dataset: {source: return_data['data']},
+                    title: {
+                        text: 'Death | 死亡',
+                        textStyle: {
+                            color: '#4a4a4a',
+                            fontFamily: 'alibold',
+                        }
+                    },
+                    xAxis: {
+                        min: function (value) {
+                            return value.min - 1000;
+                        },
+                        max: function (value) {
+                            return value.max + 1000;
+                        },
+                    },
+                    yAxis: {
+                        min: function (value) {
+                            v = value.min - ((value.max - value.min) * 0.1).toFixed(0);
+                            return v >= 0 ? v : 0;
+                        },
+                    },
+                    series: [
+                        {type: 'line', encode: {x: 'time', y: 'death'}, smoothMonotone: 'x'},
+                        {type: 'line', encode: {x: 'time', y: 'death'}, smoothMonotone: 'x'},
+                        {type: 'line', encode: {x: 'time', y: 'death'}, smoothMonotone: 'x'},
+                        {type: 'line', encode: {x: 'time', y: 'death'}, smoothMonotone: 'x'},
+                    ]
+                };
+
+                let option_c = {
+                    dataset: {source: return_data['data']},
+                    title: {
+                        text: 'Cured | 治愈',
+                        textStyle: {
+                            color: '#4a4a4a',
+                            fontFamily: 'alibold',
+                        }
+                    },
+                    xAxis: {
+                        min: function (value) {
+                            return value.min - 1000;
+                        },
+                        max: function (value) {
+                            return value.max + 1000;
+                        },
+                    },
+                    yAxis: {
+                        min: function (value) {
+                            v = value.min - ((value.max - value.min) * 0.1).toFixed(0);
+                            return v >= 0 ? v : 0;
+                        },
+                    },
+                    series: [{type: 'line', encode: {x: 'time', y: 'cured'}, smoothMonotone: 'x'},]
+                };
 
 
-    });
+                chart_infected.setOption(option_i);
+                chart_sceptical.setOption(option_s);
+                chart_death.setOption(option_d);
+                chart_cured.setOption(option_c);
+
+
+            });
+
+        }
+    );
 
 
 </script>
-
 
 <script>
 
@@ -120,18 +252,12 @@
     });
 </script>
 
+
 </body>
 
 <footer>
-    <style>
-        .footer_box {
-            position: absolute;
-            bottom: 28px;
-            text-align: center;
-            width: 100%;
-        }
-    </style>
-    <div class="footer_box">
+
+    <div class="pn-footer">
         <div class="copyright unselective">Copyright © 2020 Artrix Technologies.</div>
     </div>
 
