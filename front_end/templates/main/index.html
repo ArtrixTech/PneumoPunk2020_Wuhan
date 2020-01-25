@@ -11,7 +11,7 @@
 
     <link rel="stylesheet/less" type="text/css" href="{{ url_for('main.static', filename='style/main.less') }}">
 
-    <link href="https://fonts.googleapis.com/css?family=Catamaran|Noto+Sans+SC&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Catamaran|Noto+Sans&display=swap" rel="stylesheet">
 
     <script src="{{ url_for('main.static', filename='js/utils/less-var-manager.js') }}"></script>
     <script src="{{ url_for('main.static', filename='js/jquery-3.3.1.min.js') }}"></script>
@@ -107,6 +107,15 @@
     less.pageLoadFinished.then(
         () => {
 
+            let color_list = [
+                "rgba(255,104,83,0.67)",
+                "#4bc5e0",
+                "#626c91",
+                "#a0a7e6",
+                "#c4ebad",
+                "#96dee8"
+            ];
+
             let chart_infected = echarts.init(document.getElementById('infected'), 'main_theme');
             let chart_sceptical = echarts.init(document.getElementById('sceptical'), 'main_theme');
             let chart_death = echarts.init(document.getElementById('death'), 'main_theme');
@@ -141,6 +150,7 @@
 
                     ],
                     xAxis: {
+                        type: 'time',
                         scale: true,
                         min: function (value) {
                             return value.min - 1000;
@@ -155,10 +165,12 @@
                             return v >= 0 ? v : 0;
                         },
                     },
-                    series: [
-                        {type: 'line', encode: {x: 'time', y: 'infected'}, smoothMonotone: 'x'},
-
-                    ]
+                    series: [{
+                        type: 'line', encode: {x: 'time', y: 'infected'}, smoothMonotone: 'x', lineStyle:
+                            {
+                                width: 3
+                            }
+                    }]
                 };
                 let option_s = {
                     dataset: {source: return_data['data']},
@@ -169,8 +181,14 @@
                             fontFamily: 'alibold',
                         }
                     },
-
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'line'
+                        }
+                    },
                     xAxis: {
+                        type: 'time',
                         scale: true,
                         min: function (value) {
                             return value.min - 1000;
@@ -187,8 +205,14 @@
                         },
                     },
                     series: [
-                        {type: 'line', encode: {x: 'time', y: 'sceptical'}, smoothMonotone: 'x'},
-                        {type: 'line', encode: {x: 'time', y: 'sceptical'}, smoothMonotone: 'x'},
+                        {
+                            type: 'line', encode: {x: 'time', y: 'sceptical'}, smoothMonotone: 'x', itemStyle: {
+                                color: color_list[1]
+                            }, lineStyle: {
+                                width: 3
+                            }
+                        }
+
                     ]
                 };
 
@@ -201,7 +225,14 @@
                             fontFamily: 'alibold',
                         }
                     },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'line'
+                        }
+                    },
                     xAxis: {
+                        type: 'time',
                         min: function (value) {
                             return value.min - 1000;
                         },
@@ -216,10 +247,14 @@
                         },
                     },
                     series: [
-                        {type: 'line', encode: {x: 'time', y: 'death'}, smoothMonotone: 'x'},
-                        {type: 'line', encode: {x: 'time', y: 'death'}, smoothMonotone: 'x'},
-                        {type: 'line', encode: {x: 'time', y: 'death'}, smoothMonotone: 'x'},
-                        {type: 'line', encode: {x: 'time', y: 'death'}, smoothMonotone: 'x'},
+                        {
+                            type: 'line', encode: {x: 'time', y: 'death'}, smoothMonotone: 'x', itemStyle: {
+                                color: color_list[2]
+                            }, lineStyle: {
+                                width: 3
+                            }
+                        }
+
                     ]
                 };
 
@@ -232,7 +267,14 @@
                             fontFamily: 'alibold',
                         }
                     },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'line'
+                        }
+                    },
                     xAxis: {
+                        type: 'time',
                         scale: true,
                         min: function (value) {
                             return value.min - 1000;
@@ -248,11 +290,16 @@
                         },
                     },
                     series: [
-                        {type: 'line', encode: {x: 'time', y: 'cured'}, smoothMonotone: 'x'},
-                        {type: 'line', encode: {x: 'time', y: 'cured'}, smoothMonotone: 'x'},
-                        {type: 'line', encode: {x: 'time', y: 'cured'}, smoothMonotone: 'x'},
+                        {
+                            type: 'line', encode: {x: 'time', y: 'cured'}, smoothMonotone: 'x', itemStyle: {
+                                color: color_list[3],
+                            }, lineStyle: {
+                                width: 3
+                            }
+                        },
                     ]
                 };
+
 
                 let option_total = {
                     dataset: {source: return_data['data']},
@@ -279,13 +326,7 @@
                     ],
 
                     xAxis: {
-                        scale: true,
-                        min: function (value) {
-                            return value.min - 1000;
-                        },
-                        max: function (value) {
-                            return value.max + 1000;
-                        },
+                        type: 'time'
                     },
                     yAxis: {
                         min: function (value) {
@@ -294,8 +335,24 @@
                         },
                     },
                     series: [
-                        {type: 'line', encode: {x: 'time', y: 'infected'}, smoothMonotone: 'x'},
-                        {type: 'line', encode: {x: 'time', y: 'sceptical'}, smoothMonotone: 'x'},
+                        {
+                            name: '感染',
+                            type: 'line',
+                            encode: {x: 'time', y: 'infected'},
+                            smoothMonotone: 'x',
+                            lineStyle: {
+                                width: 3
+                            }
+                        },
+                        {
+                            name: '疑似',
+                            type: 'line',
+                            encode: {x: 'time', y: 'sceptical'},
+                            smoothMonotone: 'x',
+                            lineStyle: {
+                                width: 3
+                            }
+                        },
                         //{type: 'line', encode: {x: 'time', y: 'death'}, smoothMonotone: 'x'},
                         //{type: 'line', encode: {x: 'time', y: 'cured'}, smoothMonotone: 'x'},
                     ]

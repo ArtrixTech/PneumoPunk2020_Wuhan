@@ -10,6 +10,10 @@ dbf = DatabaseOperation("mysql.artrix.tech", "pneu2020", "pneu2020",
                         "pneu2020", charset='utf8', port=33069)
 
 
+def linux_timespan_to_js(linux_ts):
+    return int(str(linux_ts) + '000')
+
+
 def execute_with_json_return(db, sql_command):
     assert isinstance(sql_command, SqlCommand)
 
@@ -21,7 +25,8 @@ def execute_with_json_return(db, sql_command):
     if flag:
         rt_list = {'code': 0,
                    'count': len(result),
-                   'start_time': min(item[keys.index('time')] for item in result),
+                   'start_time': linux_timespan_to_js(min(item[keys.index('time')] for item in result)),
+                   # 'start_time': min(item[keys.index('time')] for item in result),
                    'msg': "",
                    'data': []}
 
@@ -30,7 +35,12 @@ def execute_with_json_return(db, sql_command):
             item_dict = {}
             index = 0
             for data in item:
-                item_dict[keys[index].replace(" ", "")] = data
+                item_name = keys[index].replace(" ", "")
+
+                if item_name == 'time':
+                    item_dict[item_name] = linux_timespan_to_js(data)
+                else:
+                    item_dict[item_name] = data
                 index += 1
 
             rt_list['data'].append(item_dict)

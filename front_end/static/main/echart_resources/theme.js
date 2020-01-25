@@ -1,3 +1,4 @@
+
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
@@ -21,8 +22,8 @@
     }
     echarts.registerTheme('main_theme', {
         "color": [
-            "#3fb1e3",
-            "#6be6c1",
+            "rgba(255,104,83,0.67)",
+            "#4bc5e0",
             "#626c91",
             "#a0a7e6",
             "#c4ebad",
@@ -41,12 +42,12 @@
         "line": {
             "itemStyle": {
                 "normal": {
-                    "borderWidth": "2"
+                    "borderWidth": "5"
                 }
             },
             "lineStyle": {
                 "normal": {
-                    "width": "3"
+                    "width": "7"
                 }
             },
             "symbolSize": "5",
@@ -61,10 +62,10 @@
             },
             "lineStyle": {
                 "normal": {
-                    "width": "3"
+                    "width": "7"
                 }
             },
-            "symbolSize": "5",
+            "symbolSize": "6",
             "symbol": "circle",
             "smooth": true
         },
@@ -188,12 +189,12 @@
                     "color": "#cccccc"
                 }
             },
-            "symbolSize": "5",
+            "symbolSize": "6",
             "symbol": "circle",
             "smooth": true,
             "color": [
-                "#3fb1e3",
-                "#6be6c1",
+                "rgba(255,104,83,0.67)",
+                "#4bc5e0",
                 "#626c91",
                 "#a0a7e6",
                 "#c4ebad",
