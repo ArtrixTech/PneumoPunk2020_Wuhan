@@ -94,13 +94,15 @@ def analyze_province(json_data, modify_time):
     for prov in modify_map:
         if modify_map[prov]:
             print('Province: ', prov, ' modified.')
+
+            print(province_data[prov])
             infected = province_data[prov]['confirmedCount']
             sceptical = province_data[prov]['suspectedCount']
             death = province_data[prov]['deadCount']
             cured = province_data[prov]['curedCount']
             city_data = str(province_data[prov]['cities']).replace("'", '`')
 
-            data = (modify_time, prov, infected, sceptical, death, cured, city_data)
+            data = (modify_time, prov, infected, death, sceptical, cured, city_data)
             data_str = str(data)
             db.insert_item_data('data_record_province', data_str)
             db.commit()
