@@ -57,6 +57,7 @@ def analyze_overview(json_data):
     return last_overview_data, modify_time
 
 
+startup_flag = True
 last_province_data = {}
 province_modify_bool = {}
 province_names = ['湖北省', '浙江省', '广东省', '河南省', '重庆市', '湖南省', '安徽省', '北京市', '上海市', '山东省', '江西省', '广西壮族自治区', '江苏省', '四川省',
@@ -65,12 +66,24 @@ province_names = ['湖北省', '浙江省', '广东省', '河南省', '重庆市
 
 
 def analyze_province(json_data, modify_time):
+    global startup_flag
+
     def comp_prov_data(prov_data1, prov_data2):
         for key in prov_data1:
             if not key == 'cities':  # Only compare summary data
                 if not prov_data2[key] == prov_data1[key]:
                     return False
         return True
+
+    def is_only_city_data_change(prov_data1, prov_data2):  # If this update only about the "city" data
+        clause1 = prov_data1[prov]['confirmedCount'] == prov_data2[prov]['confirmedCount']
+        clause2 = prov_data1[prov]['suspectedCount'] == prov_data1[prov]['suspectedCount']
+        clause3 = prov_data1[prov]['deadCount'] == prov_data1[prov]['deadCount']
+        clause4 = prov_data1[prov]['curedCount'] == prov_data1[prov]['curedCount']
+        clause5 = not prov_data1[prov]['cities'] == prov_data2[prov]['cities']
+        if clause1 and clause2 and clause3 and clause4 and clause5:
+            return True
+        return False
 
     province_data = {}
     modify_map = {}
@@ -91,6 +104,9 @@ def analyze_province(json_data, modify_time):
                 modify_map[prov] = True
                 last_province_data[prov] = province_data[prov]
 
+    now_time = time.time()
+    # print(db.query_in_column('data_record_province', 'time=%s and province_name=%s' % (1580022175, "'福建省'")))
+
     for prov in modify_map:
         if modify_map[prov]:
             print('Province: ', prov, ' modified.')
@@ -102,10 +118,18 @@ def analyze_province(json_data, modify_time):
             cured = province_data[prov]['curedCount']
             city_data = str(province_data[prov]['cities']).replace("'", '`')
 
-            data = (modify_time, prov, infected, death, sceptical, cured, city_data)
+            data = (now_time, prov, infected, death, sceptical, cured, city_data)
             data_str = str(data)
-            db.insert_item_data('data_record_province', data_str)
+
+            # db.query_in_column('data_record_province', 'time=%s and province_name=%s' % (now_time, prov))
+            print(startup_flag)
+            if is_only_city_data_change(last_province_data, province_data) and not startup_flag:
+                db.replace_item_data('data_record_province', data_str)
+            else:
+                db.insert_item_data('data_record_province', data_str)
+
             db.commit()
+    startup_flag = False
 
 
 while True:

@@ -19,33 +19,37 @@ def execute_with_json_return(db, sql_command):
 
     keys = str(sql_command.select_param[0]).split(',')
 
-    flag, result = db.execute(str(sql_command))
-    db.commit()
+    try:
+        flag, result = db.execute(str(sql_command))
+        db.commit()
 
-    if flag:
-        rt_list = {'code': 0,
-                   'count': len(result),
-                   'start_time': linux_timespan_to_js(min(item[keys.index('time')] for item in result)),
-                   # 'start_time': min(item[keys.index('time')] for item in result),
-                   'msg': "",
-                   'data': []}
+        if flag:
+            rt_list = {'code': 0,
+                       'count': len(result),
+                       'start_time': linux_timespan_to_js(min(item[keys.index('time')] for item in result)),
+                       # 'start_time': min(item[keys.index('time')] for item in result),
+                       'msg': "",
+                       'data': []}
 
-        for item in result:
+            for item in result:
 
-            item_dict = {}
-            index = 0
-            for data in item:
-                item_name = keys[index].replace(" ", "")
+                item_dict = {}
+                index = 0
+                for data in item:
+                    item_name = keys[index].replace(" ", "")
 
-                if item_name == 'time':
-                    item_dict[item_name] = linux_timespan_to_js(data)
-                else:
-                    item_dict[item_name] = data
-                index += 1
+                    if item_name == 'time':
+                        item_dict[item_name] = linux_timespan_to_js(data)
+                    else:
+                        item_dict[item_name] = data
+                    index += 1
 
-            rt_list['data'].append(item_dict)
-        return json.dumps(rt_list)
-    return {'code': 400, 'count': 0, 'msg': "Database Error."}
+                rt_list['data'].append(item_dict)
+            return json.dumps(rt_list)
+        return {'code': 400, 'count': 0, 'msg': "Database Error."}
+    except:
+        db.reconnect()
+        return {'code': 400, 'count': 0, 'msg': "Database Error."}
 
 
 @back_blueprint.route('/get_history')

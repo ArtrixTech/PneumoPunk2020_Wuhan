@@ -33,25 +33,17 @@ class DatabaseOperation:
     def __del__(self):
         self.db.close()
 
-    def create_item_table(self, name):
-        self.cursor.execute("CREATE TABLE IF NOT EXISTS %s ("
-                            "update_time INT,"
-                            "buff_id INT,"
-                            "exhibition_image TEXT,"
-                            "buff_trade_history JSON,"
-                            "buff_selling_duration FLOAT,"
-                            "buff_buy_price FLOAT,"
-                            "buff_history_trade_price_median FLOAT,"
-                            "buff_history_trade_price_std_error FLOAT,"
-                            "steam_buy_price FLOAT,"
-                            "buff_in_stock_count INT,"
-                            "steam_market_url TEXT"
-                            ")" % str(name))
-
     def insert_item_data(self, item_name, data):
         print("INSERT INTO %s VALUES %s" %
               (str(item_name), str(data)))
         self.cursor.execute("INSERT IGNORE INTO %s VALUES %s" %
+                            (str(item_name), str(data)))
+        self.commit()
+
+    def replace_item_data(self, item_name, data):
+        print("REPLACE INTO %s VALUES %s" %
+              (str(item_name), str(data)))
+        self.cursor.execute("REPLACE INTO %s VALUES %s" %
                             (str(item_name), str(data)))
         self.commit()
 
@@ -72,9 +64,9 @@ class DatabaseOperation:
                 print('MySQL connection error. Info: ', e)
                 return False, None
 
-    def query_in_column(self, item_value, column_name, table_name):
-        return bool(self.cursor.execute("SELECT * FROM CSGO.%s WHERE %s=%s;" %
-                                        (table_name, column_name, item_value))), \
+    def query_in_column(self, table_name, clause):
+        return bool(self.cursor.execute("SELECT * FROM pneu2020.%s WHERE %s;" %
+                                        (table_name, clause))), \
                self.cursor.fetchall()
 
     def query_whole_column(self, column_name, table_name, where_clause=None):

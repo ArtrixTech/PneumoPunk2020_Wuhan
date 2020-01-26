@@ -33,6 +33,10 @@ class DatabaseOperation:
     def __del__(self):
         self.db.close()
 
+    def reconnect(self):
+        self.db.close()
+        self.db = self.gen_db_connction()
+
     def create_item_table(self, name):
         self.cursor.execute("CREATE TABLE IF NOT EXISTS %s ("
                             "update_time INT,"
@@ -86,8 +90,6 @@ class DatabaseOperation:
             return bool(
                 self.cursor.execute("SELECT %s FROM CSGO.%s WHERE %s;" % (column_name, table_name, where_clause))), \
                    self.cursor.fetchall()
-
-
 
 
 class SqlCommand:
