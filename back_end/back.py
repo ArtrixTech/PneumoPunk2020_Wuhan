@@ -6,7 +6,7 @@ from flask import Blueprint
 from utils.database import *
 
 back_blueprint = Blueprint('back_end', __name__)
-dbf = DatabaseOperation("mysql.artrix.tech", "pneu2020", "pneu2020",
+dbf = DatabaseOperation("mysql.artrix.tech", "pneu2020", "pneu",
                         "pneu2020", charset='utf8', port=33069)
 
 
