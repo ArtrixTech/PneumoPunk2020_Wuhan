@@ -12,7 +12,7 @@ db = DatabaseOperation("mysql.artrix.tech", "pneu2020", "pneu",
 
 last_time = None
 last_overview_data = ()
-SLEEP_DELAY = 30  # Unit: second
+SLEEP_DELAY = 5  # Unit: second
 
 
 def data_equal(tuple1, tuple2):
@@ -48,11 +48,12 @@ def analyze_overview(json_data):
         data = (modify_time, region, infected, death, sceptical, cured, image_url)
         data_str = str(data)
 
-        if not data_equal(data[1:], last_overview_data[1:]):
-            db.insert_item_data('data_record', data_str)
+        try:
+            if not data_equal(data[1:], last_overview_data[1:]):
+                db.insert_item_data('data_record', data_str)
+        except TypeError:
+            print('Line1: ', data, '\n Line2:', last_overview_data)
 
-        print(data)
-        print(modify_time)
         return data, modify_time
     return None, modify_time
 
@@ -65,6 +66,13 @@ province_names = ['湖北省', '浙江省', '广东省', '河南省', '重庆市
 
 
 def analyze_province(json_data, modify_time):
+    def comp_prov_data(prov_data1, prov_data2):
+        for key in prov_data1:
+            if not key == 'cities':  # Only compare summary data
+                if not prov_data2[key] == prov_data1[key]:
+                    return False
+        return True
+
     province_data = {}
     modify_map = {}
     for province in json_data:
@@ -78,7 +86,7 @@ def analyze_province(json_data, modify_time):
             modify_map[prov] = True
     else:
         for prov in province_names:
-            if str(last_province_data[prov]) == str(province_data[prov]):
+            if comp_prov_data(last_province_data[prov], province_data[prov]):
                 modify_map[prov] = False
             else:
                 modify_map[prov] = True
