@@ -12,7 +12,7 @@ db = DatabaseOperation("mysql.artrix.tech", "pneu2020", "pneu",
 
 last_time = None
 last_overview_data = ()
-SLEEP_DELAY = 5  # Unit: second
+SLEEP_DELAY = 15  # Unit: second
 
 
 def data_equal(tuple1, tuple2):
@@ -48,14 +48,13 @@ def analyze_overview(json_data):
         data = (modify_time, region, infected, death, sceptical, cured, image_url)
         data_str = str(data)
 
-        try:
-            if not data_equal(data[1:], last_overview_data[1:]):
-                db.insert_item_data('data_record', data_str)
-        except TypeError:
-            print('Line1: ', data, '\n Line2:', last_overview_data)
+        if not data_equal(data[1:], last_overview_data[1:]):
+            db.insert_item_data('data_record', data_str)
+        else:
+            print('Unchanged')
 
         return data, modify_time
-    return None, modify_time
+    return (), modify_time
 
 
 last_province_data = {}
