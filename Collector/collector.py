@@ -54,7 +54,7 @@ def analyze_overview(json_data):
             print('Unchanged')
 
         return data, modify_time
-    return (), modify_time
+    return last_overview_data, modify_time
 
 
 last_province_data = {}
