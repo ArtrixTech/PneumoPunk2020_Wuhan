@@ -64,9 +64,9 @@ class DatabaseOperation:
                 print('MySQL connection error. Info: ', e)
                 return False, None
 
-    def query_in_column(self, table_name, clause):
-        return bool(self.cursor.execute("SELECT * FROM pneu2020.%s WHERE %s;" %
-                                        (table_name, clause))), \
+    def query_in_column(self, table_name, select_clause, where_clause):
+        return bool(self.cursor.execute("SELECT %s FROM pneu2020.%s WHERE %s;" %
+                                        (select_clause, table_name, where_clause))), \
                self.cursor.fetchall()
 
     def query_whole_column(self, column_name, table_name, where_clause=None):
