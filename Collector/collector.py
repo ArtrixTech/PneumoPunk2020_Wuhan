@@ -38,7 +38,6 @@ def analyze_overview_updated(json_data):
     if not last_time == modify_time:
         region = str(json_data['id'])
         image_url = json_data['imgUrl']
-        count_describe_text = json_data['countRemark']
 
         infected = json_data['confirmedCount']
         sceptical = json_data['suspectedCount']
