@@ -33,6 +33,30 @@ def data_equal(tuple1, tuple2):
     return False
 
 
+def analyze_overview_updated(json_data):
+    modify_time = int(str(json_data['modifyTime'])[:-3])
+    if not last_time == modify_time:
+        region = str(json_data['id'])
+        image_url = json_data['imgUrl']
+        count_describe_text = json_data['countRemark']
+
+        infected = json_data['confirmedCount']
+        sceptical = json_data['suspectedCount']
+        cured = json_data['curedCount']
+        death = json_data['deadCount']
+
+        data = (modify_time, region, infected, death, sceptical, cured, image_url)
+        data_str = str(data)
+
+        if not data_equal(data[1:], last_overview_data[1:]):
+            db.insert_item_data('data_record', data_str)
+        else:
+            print('Unchanged')
+
+        return data, modify_time
+    return last_overview_data, modify_time
+
+
 def analyze_overview(json_data):
     modify_time = int(str(json_data['modifyTime'])[:-3])
     if not last_time == modify_time:
@@ -151,7 +175,7 @@ while True:
 
     try:
         overview_json = json.loads(overview)
-        last_overview_data, last_time = analyze_overview(overview_json)
+        last_overview_data, last_time = analyze_overview_updated(overview_json)
 
     except json.decoder.JSONDecodeError as e:
         print('Overview data fetch error.')
