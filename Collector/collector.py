@@ -125,41 +125,39 @@ def analyze_province(json_data, modify_time):
                 last_province_data[prov] = province_data[prov]
 
     now_time = time.time()
-    # print(db.query_in_column('data_record_province', 'time=%s and province_name=%s' % (1580022175, "'福建省'")))
 
-    for prov in modify_map:
-        if modify_map[prov]:
+    # Logic here: There are only 2 options, insert or replace.
+    for prov in province_names:
 
-            # print(province_data[prov])
-            infected = province_data[prov]['confirmedCount']
-            sceptical = province_data[prov]['suspectedCount']
-            death = province_data[prov]['deadCount']
-            cured = province_data[prov]['curedCount']
-            city_data = str(province_data[prov]['cities']).replace("'", '`')
+        # print(province_data[prov])
+        infected = province_data[prov]['confirmedCount']
+        sceptical = province_data[prov]['suspectedCount']
+        death = province_data[prov]['deadCount']
+        cured = province_data[prov]['curedCount']
+        city_data = str(province_data[prov]['cities']).replace("'", '`')
 
-            data = (now_time, prov, infected, death, sceptical, cured, city_data)
-            data_str = str(data)
+        data = (now_time, prov, infected, death, sceptical, cured, city_data)
+        data_str = str(data)
 
-            exist_same_data, val = db.query_in_column('data_record_province', 'city_data',
-                                                      'province_name=%s '
-                                                      'and infected=%s '
-                                                      'and sceptical=%s '
-                                                      'and death=%s '
-                                                      'and cured=%s' % (
-                                                          "'" + prov + "'", infected, sceptical, death, cured))
-            # if is_only_city_data_change(last_province_data, province_data) and not startup_flag:
-            if exist_same_data:
-                city_data_fetch = val[0][0]
-                if not str(city_data) == str(city_data_fetch):
-                    # print(str(city_data) + '\n' + str(city_data_fetch))
-                    db.replace_item_data('data_record_province', data_str)
-                    print('Province: ', prov, ' modified.')
-
-            else:
-                db.insert_item_data('data_record_province', data_str)
+        exist_same_data, val = db.query_in_column('data_record_province', 'city_data',
+                                                  'province_name=%s '
+                                                  'and infected=%s '
+                                                  'and sceptical=%s '
+                                                  'and death=%s '
+                                                  'and cured=%s' % (
+                                                      "'" + prov + "'", infected, sceptical, death, cured))
+        # if is_only_city_data_change(last_province_data, province_data) and not startup_flag:
+        if exist_same_data:
+            city_data_fetch = val[0][0]
+            if not str(city_data) == str(city_data_fetch):
+                # print(str(city_data) + '\n' + str(city_data_fetch))
+                db.replace_item_data('data_record_province', data_str)
                 print('Province: ', prov, ' modified.')
+        elif modify_map[prov]:
+            db.insert_item_data('data_record_province', data_str)
+            print('Province: ', prov, ' modified.')
 
-            db.commit()
+        db.commit()
 
 
 while True:
