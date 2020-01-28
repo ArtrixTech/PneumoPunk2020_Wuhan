@@ -12,7 +12,7 @@ db = DatabaseOperation("mysql.artrix.tech", "pneu2020", "pneu",
 
 last_time = None
 last_overview_data = ()
-SLEEP_DELAY = 15  # Unit: second
+SLEEP_DELAY = 30  # Unit: second
 
 
 def data_equal(tuple1, tuple2):
