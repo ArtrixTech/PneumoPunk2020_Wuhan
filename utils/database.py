@@ -36,6 +36,7 @@ class DatabaseOperation:
     def reconnect(self):
         self.db.close()
         self.db = self.gen_db_connction()
+        self.cursor = self.db.cursor()
 
     def create_item_table(self, name):
         self.cursor.execute("CREATE TABLE IF NOT EXISTS %s ("

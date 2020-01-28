@@ -46,10 +46,10 @@ def execute_with_json_return(db, sql_command):
 
                 rt_list['data'].append(item_dict)
             return json.dumps(rt_list)
-        return {'code': 400, 'count': 0, 'msg': "Database Error."}
+        return json.dumps({'code': 400, 'count': 0, 'msg': "Database Error."})
     except:
         db.reconnect()
-        return {'code': 400, 'count': 0, 'msg': "Database Error."}
+        return json.dumps({'code': 400, 'count': 0, 'msg': "Database Error."})
 
 
 @back_blueprint.route('/get_history')
