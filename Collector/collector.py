@@ -40,11 +40,12 @@ def analyze_overview_updated(json_data):
         image_url = json_data['imgUrl']
 
         infected = json_data['confirmedCount']
+        serious = json_data['seriousCount']
         sceptical = json_data['suspectedCount']
         cured = json_data['curedCount']
         death = json_data['deadCount']
 
-        data = (modify_time, region, infected, death, sceptical, cured, image_url)
+        data = (modify_time, region, infected, serious, death, sceptical, cured, image_url)
         data_str = str(data)
 
         if not data_equal(data[1:], last_overview_data[1:]):
@@ -163,7 +164,7 @@ def analyze_province(json_data, modify_time):
 while True:
     skip_flag = False
     content = retry(api_fetch, 2, DXY_URL)
-    overview = '{' + cut_string(content, 'window.getStatisticsService = {', '}') + '}'
+    overview = '{' + cut_string(content, 'window.getStatisticsService = {', '</script>').replace('}catch(e){}', '')
     overview_json = None
 
     region_stat_json = None
@@ -171,17 +172,18 @@ while True:
     region_stat = '[' + cut_string(region_stat, 'getAreaStat = [', '}catch(e)')
 
     try:
+
         overview_json = json.loads(overview)
         last_overview_data, last_time = analyze_overview_updated(overview_json)
 
     except json.decoder.JSONDecodeError as e:
-        print('Overview data fetch error.')
+        print('Overview data fetch error.', e.args)
 
     try:
         region_stat_json = json.loads(region_stat)
         analyze_province(region_stat_json, last_time)
 
     except json.decoder.JSONDecodeError as e:
-        print('Region data fetch error.')
+        print('Region data fetch error.', e.args)
 
     time.sleep(SLEEP_DELAY)
