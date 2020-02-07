@@ -11,6 +11,12 @@ class DatabaseOperation:
         return pymysql.connect(self._host, self._usr_name, self._password, self._db_name, charset=self._charset,
                                port=self._port)
 
+    def reconnect(self):
+        self.db.close()
+        self.db = self.gen_db_connction()
+        self.cursor = self.db.cursor()
+        return True
+
     def __init__(self, host, usr_name, password, db_name, charset='utf8', port=3306):
 
         self._host = host

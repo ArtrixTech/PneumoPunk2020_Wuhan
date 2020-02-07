@@ -1,6 +1,8 @@
 import json
 import time
 
+import pymysql
+
 from utils.api import *
 from utils.api_list import *
 from utils.cut_string import cut_string
@@ -178,6 +180,9 @@ while True:
 
     except json.decoder.JSONDecodeError as e:
         print('Overview data fetch error.', e.args)
+    except pymysql.err.OperationalError as e:
+        print('Overview data saving error. Reconnecting...', e.args)
+        print('Reconnect result:', db.reconnect())
 
     try:
         region_stat_json = json.loads(region_stat)
@@ -185,5 +190,8 @@ while True:
 
     except json.decoder.JSONDecodeError as e:
         print('Region data fetch error.', e.args)
+    except pymysql.err.OperationalError as e:
+        print('Region data saving error. Reconnecting...', e.args)
+        print('Reconnect result:', db.reconnect())
 
     time.sleep(SLEEP_DELAY)
