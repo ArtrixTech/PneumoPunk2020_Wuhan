@@ -87,11 +87,11 @@ export function draw_all_charts() {
         let option_i = gen_chart_option(return_data['data'], 'Infected | 确诊',
             [gen_line_series('time', 'infected', {color: color_list[0]})]);
         let option_d = gen_chart_option(return_data['data'], 'Death | 死亡',
-            [gen_line_series('time', 'infected', {color: color_list[1]})]);
-        let option_s = gen_chart_option(return_data['data'], 'Sceptical | 疑似',
             [gen_line_series('time', 'infected', {color: color_list[2]})]);
+        let option_s = gen_chart_option(return_data['data'], 'Sceptical | 疑似',
+            [gen_line_series('time', 'infected', {color: color_list[1]})]);
         let option_c = gen_chart_option(return_data['data'], 'Cured | 治愈',
-            [gen_line_series('time', 'infected', {color: color_list[3]})]);
+            [gen_line_series('time', 'infected', {color: color_list[4]})]);
 
 
         let option_total = {
