@@ -56,6 +56,6 @@ def execute_with_json_return(db, sql_command):
 def get_sell_recommend():
     sql = SqlCommand()
     sql.select('region,time,infected,death,sceptical,cured', 'data_record')
-    sql.order('time').limit(500)
+    sql.order('time').limit(2000)
     print('fetching...')
     return flask.make_response(execute_with_json_return(dbf, sql))
