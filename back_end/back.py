@@ -24,7 +24,6 @@ def execute_with_json_return(db, sql_command):
     try:
         flag, result = db.execute(str(sql_command))
         db.commit()
-        print(flag, result)
 
         if flag:
             rt_list = {'code': 0,
