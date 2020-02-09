@@ -80,7 +80,10 @@ export function draw_all_charts() {
     let chart_cured = echarts.init(document.getElementById('cured'), 'main_theme');
     let chart_total = echarts.init(document.getElementById('total'), 'main_theme');
 
-    $.getJSON('/get_history', (return_data) => {
+    let host = window.location.host;
+    let request_loc = 'http://api.' + host + '/get_history';
+
+    $.getJSON(request_loc, (return_data) => {
 
         console.log(return_data['data']);
 

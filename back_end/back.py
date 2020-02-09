@@ -2,12 +2,14 @@ import json
 
 import flask
 from flask import Blueprint
+from flask_cors import CORS
 
 from utils.database import *
 
-back_blueprint = Blueprint('back_end', __name__)
+back_blueprint = Blueprint('back_end', subdomain='api', import_name=__name__)
 dbf = DatabaseOperation("mysql.artrix.tech", "pneu2020", "pneu",
                         "pneu2020", charset='utf8', port=33069)
+CORS(back_blueprint)
 
 
 def linux_timespan_to_js(linux_ts):
