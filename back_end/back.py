@@ -24,6 +24,7 @@ def execute_with_json_return(db, sql_command):
     try:
         flag, result = db.execute(str(sql_command))
         db.commit()
+        print(flag, result)
 
         if flag:
             rt_list = {'code': 0,
@@ -55,9 +56,9 @@ def execute_with_json_return(db, sql_command):
 
 
 @back_blueprint.route('/get_history')
-def get_sell_recommend():
+def get_history():
     sql = SqlCommand()
-    sql.select('region,time,infected,death,sceptical,cured', 'data_record')
+    sql.select('time,infected,death,sceptical,cured', 'data_record')
     sql.order('time').limit(2000)
     print('fetching...')
     return flask.make_response(execute_with_json_return(dbf, sql))
