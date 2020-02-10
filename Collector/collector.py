@@ -47,7 +47,7 @@ def analyze_overview_updated(json_data):
         cured = json_data['curedCount']
         death = json_data['deadCount']
 
-        data = (modify_time, region, infected, serious, death, sceptical, cured, image_url)
+        data = (modify_time, infected, serious, death, sceptical, cured, image_url)
         data_str = str(data)
 
         if not data_equal(data[1:], last_overview_data[1:]):
@@ -71,7 +71,7 @@ def analyze_overview(json_data):
         cured = cut_string(count_describe_text, '治愈', '例').strip('\' ')
         death = cut_string(count_describe_text, '死亡', '例').strip('\' ')
 
-        data = (modify_time, region, infected, death, sceptical, cured, image_url)
+        data = (modify_time, infected, death, sceptical, cured, image_url)
         data_str = str(data)
 
         if not data_equal(data[1:], last_overview_data[1:]):
